@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Movie Ticket Booking{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <span class="pill">ONLINE BOOKING</span>
+    <h1>Book your movie tickets easily.</h1>
+    <p>Check show availability, select seats, calculate cost and confirm your booking.</p>
+  </div>
+  <div class="hero-icon">🍿</div>
+</section>
+
+<h2>Now Showing</h2>
+<div class="movie-grid">
+{% for m in movies %}
+  <article class="movie-card">
+    <div class="poster">{{ m.title[0] }}</div>
+    <div>
+      <h3>{{ m.title }}</h3>
+      <p>{{ m.genre }} • {{ m.language }} • {{ m.duration }} min</p>
+      <small>{{ m.description }}</small>
+    </div>
+  </article>
+{% endfor %}
+</div>
+
+<h2>Available Shows</h2>
+<div class="show-grid">
+{% for s in shows %}
+  <article class="show-card">
+    <h3>{{ s.title }}</h3>
+    <p>{{ s.show_date }} • {{ s.show_time }}</p>
+    <p>{{ s.screen }} • {{ s.language }} • {{ s.genre }}</p>
+    <div class="price">₹{{ "%.2f"|format(s.price) }} / seat</div>
+    <a class="btn" href="{{ url_for('book', show_id=s.id) }}">Book Tickets</a>
+  </article>
+{% else %}
+  <p>No shows available.</p>
+{% endfor %}
+</div>
+{% endblock %}

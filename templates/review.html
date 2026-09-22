@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Review Booking{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <span class="pill">US-006</span>
+    <h1>Review Booking Details</h1>
+    <p>Verify the request before final confirmation.</p>
+  </div>
+</div>
+<div class="detail-grid">
+  <div class="form-card">
+    <h2>{{ booking.title }}</h2>
+    <p><b>Booking Code:</b> {{ booking.booking_code }}</p>
+    <p><b>Customer:</b> {{ booking.customer_name }}</p>
+    <p><b>Email:</b> {{ booking.email }}</p>
+    <p><b>Phone:</b> {{ booking.phone }}</p>
+    <p><b>Show:</b> {{ booking.show_date }} at {{ booking.show_time }} ({{ booking.screen }})</p>
+    <p><b>Seats:</b> {{ booking.seats }}</p>
+    <p><b>Seat Count:</b> {{ booking.seat_count }}</p>
+    <p><b>Total:</b> ₹{{ "%.2f"|format(booking.total_amount) }}</p>
+    <p><b>Status:</b> <span class="status {{ booking.status|lower }}">{{ booking.status }}</span></p>
+    <p><b>SLA Due:</b> {{ booking.sla_due }}</p>
+    {% if booking.status == 'Pending' %}
+    <form method="POST" action="{{ url_for('confirm', booking_id=booking.id) }}">
+      <button class="btn" type="submit">Confirm Booking Request</button>
+    </form>
+    {% else %}
+      <a class="btn" href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+    {% endif %}
+  </div>
+  <div class="form-card">
+    <h2>Case Lifecycle</h2>
+    {% for e in events %}
+      <div class="timeline"><b>{{ e.event }}</b><small>{{ e.event_time }}</small></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

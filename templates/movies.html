@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Manage Movies{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="pill">US-005</span><h1>Maintain Movie Data</h1><p>Add movies to the booking catalog.</p></div></div>
+<div class="detail-grid">
+<form method="POST" class="form-card">
+  <h2>Add Movie</h2>
+  <label>Title<input name="title" required></label>
+  <label>Genre<input name="genre" required></label>
+  <label>Duration (minutes)<input type="number" name="duration" required min="1"></label>
+  <label>Language<input name="language" required></label>
+  <label>Certificate<input name="certificate" required></label>
+  <label>Description<textarea name="description"></textarea></label>
+  <button class="btn" type="submit">Add Movie</button>
+</form>
+<div class="form-card">
+<h2>Movie Catalog</h2>
+{% for m in movies %}
+<div class="catalog-item"><b>{{ m.title }}</b><span>{{ m.genre }} • {{ m.language }} • {{ m.duration }} min</span></div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

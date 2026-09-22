@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Book Tickets{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Submit Movie Ticket Request</h1>
+    <p>{{ show.title }} • {{ show.show_date }} • {{ show.show_time }} • {{ show.screen }}</p>
+  </div>
+  <a class="btn secondary" href="{{ url_for('index') }}">Back</a>
+</div>
+
+<form method="POST" id="bookingForm" class="form-card">
+  <div class="form-grid">
+    <label>Customer Name<input name="customer_name" required placeholder="Enter full name"></label>
+    <label>Email<input type="email" name="email" required placeholder="name@example.com"></label>
+    <label>Phone<input name="phone" required pattern="[0-9]{10}" placeholder="10 digit number"></label>
+  </div>
+
+  <h2>Select Seats</h2>
+  <div class="screen">SCREEN</div>
+  <div class="seat-grid">
+    {% for seat in seats %}
+      <button type="button" class="seat" data-seat="{{ seat }}">{{ seat }}</button>
+    {% endfor %}
+  </div>
+  <p class="legend"><span class="dot"></span> Available &nbsp; <span class="dot selected"></span> Selected</p>
+
+  <input type="hidden" name="seats" id="selectedSeats">
+  <div class="summary">
+    <div>Selected: <strong id="seatText">None</strong></div>
+    <div>Price per seat: <strong>₹{{ "%.2f"|format(show.price) }}</strong></div>
+    <div class="total">Total: ₹<span id="total">0.00</span></div>
+  </div>
+  <button class="btn" type="submit">Submit Booking Request</button>
+</form>
+<script>
+const price = {{ show.price|tojson }};
+const selected = new Set();
+document.querySelectorAll('.seat').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const seat = btn.dataset.seat;
+    if (selected.has(seat)) { selected.delete(seat); btn.classList.remove('selected'); }
+    else { selected.add(seat); btn.classList.add('selected'); }
+    const list = [...selected].sort();
+    document.getElementById('selectedSeats').value = list.join(',');
+    document.getElementById('seatText').textContent = list.length ? list.join(', ') : 'None';
+    document.getElementById('total').textContent = (list.length * price).toFixed(2);
+  });
+});
+document.getElementById('bookingForm').addEventListener('submit', e => {
+  if (!selected.size) { e.preventDefault(); alert('Please select at least one seat.'); }
+});
+</script>
+{% endblock %}
